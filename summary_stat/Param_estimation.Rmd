@@ -1,0 +1,52 @@
+---
+title: "Param_estimation"
+author: "Jelly Lee"
+date: "June 20, 2024"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Set working directory and read data
+
+```{r}
+setwd("C:/Users/zl23n/OneDrive - Florida State University/Graduate-FSU/Research/2024 Airport TR-B/airport_code/pythonProject/summary_stat")
+data <- read.csv("PHX_Annual.csv")
+colnames(data) <- c("year", "passenger")
+head(data)
+
+
+data$passenger = data$passenger / 1e7
+
+
+# Create lagged column
+data$passenger_next <- c(data$passenger[-1], NA)
+head(data)
+
+data <- data[-1, ]
+head(data)
+
+
+data <- subset(data, year < 2019)
+tail(data)
+
+data$y <- data$passenger_next / data$passenger
+data$x <- data$passenger
+```
+
+
+## Linear Regression
+
+```{r}
+model <- lm(y ~ x, data = data)
+summary(model)
+```
+
+## plot diagnostics
+
+```{r}
+plot(model)
+```
+
