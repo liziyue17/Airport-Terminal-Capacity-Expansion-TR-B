@@ -42,9 +42,9 @@ def plot_V_F_function_old(Q_array, V_array, F_array, plot_title, opt_trigger_poi
     plt.ylim(np.max(F_array) * (-1), np.max(F_array) * 3)
     plt.plot(Q_array, V_array, linestyle='-', color='b', label = r'$V$ function')#,  marker='o', markersize=3)
     plt.plot(Q_array, F_array, linestyle='-', color='green', label = r'$F$ function')  # ,  marker='o', markersize=3)
-    plt.title(plot_title, fontsize=18, fontweight='bold')
-    plt.xlabel(r'$Q$', fontsize=14, fontweight='bold')
-    plt.ylabel('Value', fontsize=14, fontweight='bold')
+    plt.title(plot_title, fontsize=14, fontweight='bold')
+    plt.xlabel(r'$Q$', fontsize=10, fontweight='bold')
+    plt.ylabel('Value', fontsize=10, fontweight='bold')
     plt.axhline(y=0, color='black', linestyle='-', linewidth=0.7)
     if opt_trigger_point is not None:
         plt.plot(opt_trigger_point[0], opt_trigger_point[1], marker='*', linestyle='None', markersize=15, color='red', label=r'Optimal trigger $q^*$ = ' + f'{opt_trigger_point[0]:.1e}')
@@ -59,38 +59,61 @@ def plot_V_F_function_old(Q_array, V_array, F_array, plot_title, opt_trigger_poi
         plt.savefig(result_folder + filename + '.pdf', bbox_inches='tight')
     plt.show()
 
-def plot_V_F_function(Q_array, V_array, F_array, plot_title, opt_trigger_point = None, NPV_point = None, result_folder = None, filename = 'solve_V_F.pdf'):
+def plot_V_F_function(Q_array, V_array, F_array, plot_title, opt_trigger_point = None, NPV_point = None, result_folder = None, filename = 'solve_V_F.pdf', annotate_increasing = 0.5e4):
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 12))
     # first plot
-    ax1.plot(Q_array, V_array, linestyle='-', color='b', label=r'$V$ function')  # ,  marker='o', markersize=3)
+    ax1.plot(Q_array[V_array <= opt_trigger_point[1]], V_array[V_array <= opt_trigger_point[1]], linestyle='-', color='b', label=r'$V$ function')  # ,  marker='o', markersize=3)
     ax1.plot(Q_array, F_array, linestyle='-', color='green', label=r'$F$ function')  # ,  marker='o', markersize=3)
     ax1.set_title(r'Global View of $F$ and $V$')
-    ax1.set_xlabel(r'$Q$', fontsize=14, fontweight='bold')
-    ax1.set_ylabel('Value', fontsize=14, fontweight='bold')
-    ax1.axhline(y=0, color='black', linestyle='-', linewidth=0.7)
-    ax1.set_ylim(np.max(F_array) * (-1), np.max(F_array) * 3)  # Set y-axis limits for ax1
-    ax2.set_xlim(0, np.max(Q_array))  # Set y-axis limits for ax1
+    ax1.set_xlabel(r'$Q$', fontsize=10, fontweight='bold')
+    ax1.set_ylabel('Option Value / Cost', fontsize=10, fontweight='bold')
+    ax1.axhline(y=0, color='black', linestyle='-', linewidth=0.5)
+    ax1.set_ylim(np.max(F_array) * (-1), np.max(F_array) * 1.5)  # Set y-axis limits for ax1
+    ax1.set_xlim(0, np.max(Q_array))  # Set y-axis limits for ax1
+    if opt_trigger_point is not None:
+        ax1.plot(opt_trigger_point[0], opt_trigger_point[1], marker='*', linestyle='None', markersize=15, color='red',
+                 label=r'Optimal trigger $q^*$ = ' + f'{opt_trigger_point[0]:.2e}')
+
     ax1.legend(loc='best')
 
     # second plot
-    ax2.plot(Q_array, V_array, linestyle='-', color='b', label=r'$V$ function')  # ,  marker='o', markersize=3)
+    ax2.plot(Q_array[V_array <= opt_trigger_point[1]], V_array[V_array <= opt_trigger_point[1]], linestyle='-', color='b', label=r'$V$ function')  # ,  marker='o', markersize=3)
     ax2.plot(Q_array, F_array, linestyle='-', color='green', label=r'$F$ function')  # ,  marker='o', markersize=3)
     ax2.set_title('Zoomed-In View for Detail')
-    ax2.set_xlabel(r'$Q$', fontsize=14, fontweight='bold')
-    ax2.set_ylabel('Value', fontsize=14, fontweight='bold')
-    ax2.axhline(y=0, color='black', linestyle='-', linewidth=0.7)
+    ax2.set_xlabel(r'$Q$', fontsize=10, fontweight='bold')
+    ax2.set_ylabel('Option Value / Cost', fontsize=10, fontweight='bold')
+    ax2.axhline(y=0, color='black', linestyle='-', linewidth=0.5)
     ax2.set_ylim(opt_trigger_point[1] * (-0.2), opt_trigger_point[1] * 2.2)  # Set y-axis limits for ax1
     ax2.set_xlim(NPV_point[0] * 0.97, opt_trigger_point[0] * 1.02)  # Set y-axis limits for ax1
     if opt_trigger_point is not None:
         ax2.plot(opt_trigger_point[0], opt_trigger_point[1], marker='*', linestyle='None', markersize=15, color='red',
                  label=r'Optimal trigger $q^*$ = ' + f'{opt_trigger_point[0]:.2e}')
+        ylim = ax2.get_ylim()
+        ymin = (0 - ylim[0]) / (ylim[1] - ylim[0])  # Normalize ymin to be within the plot range
+        ymax = (opt_trigger_point[1] - ylim[0]) / (ylim[1] - ylim[0])  # Normalize ymax to be within the plot range
+        ax2.axvline(x=opt_trigger_point[0], ymin=ymin, ymax=ymax, color='black', linestyle='--', linewidth=1.2)
+
+        # Calculate the midpoint for text placement
+        midpoint_y = opt_trigger_point[1] / 2
+
+        # Add text and arrows
+        ax2.annotate('Wait', xy=(opt_trigger_point[0], midpoint_y),
+                     xytext=(opt_trigger_point[0] - annotate_increasing, midpoint_y),  # Increase space on the left
+                     fontsize=18, ha='right', va='center',fontname='Times New Roman',
+                     arrowprops=dict(arrowstyle='<-', color='black', lw=1.5))
+
+        ax2.annotate('Invest', xy=(opt_trigger_point[0], midpoint_y),
+                     xytext=(opt_trigger_point[0] + annotate_increasing, midpoint_y),  # Increase space on the right
+                     fontsize=18, ha='left', va='center',fontname='Times New Roman',
+                     arrowprops=dict(arrowstyle='<-', color='black', lw=1.5))
+
     if NPV_point is not None:
         ax2.plot(NPV_point[0], NPV_point[1], marker='o', linestyle='None', markersize=10, color='red',
                  label=r'NPV solution $q_{\text{NPV}}$ = ' + f'{NPV_point[0]:.2e}')
     ax2.legend(loc='best')
 
 
-    fig.suptitle(plot_title, fontsize=18, fontweight='bold')
+    fig.suptitle(plot_title, fontsize=14, fontweight='bold')
 
     plt.tight_layout()
     if result_folder is not None and filename is not None:

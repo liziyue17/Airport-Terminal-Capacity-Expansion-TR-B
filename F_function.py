@@ -1,6 +1,6 @@
 # author: Jelly Lee
 # create date: 06/17/2024
-# last modification: 06/27/2024
+# last modification: 07/02/2024
 # status: Completed on 06/22/2024, add numerical integral on 06/26/2024, fix bug on 06/27/2024
 
 """
@@ -156,8 +156,8 @@ def get_min_q_for_positive_F(Q_array, F_array):
                 # y = kx + b
                 k = (y2-y1) / (x2-x1)
                 b = y1 - k * x1
-                incercept_on_x = -b / k
-                return incercept_on_x#(Q_array[i-1] + Q_array[i]) / 2
+                intercept_on_x = -b / k
+                return intercept_on_x#(Q_array[i-1] + Q_array[i]) / 2
     print("Function get_min_q_for_positive_F failed!")
     return -1
     
@@ -174,6 +174,52 @@ def plot_F_function(Q_array, y_array, label, title):
 
     plt.tight_layout()
     plt.show()
+
+def plot_relationship_of_F_and_delta_K(Q_array, delta_K_array, F_array, plot_title, result_folder = None, filename = 'relationship_of_Q_delta_K.pdf'):
+    """
+    This function now only works for numerical study
+    TO DO: Set parameters s.t. it also works for other variable definitions
+    """
+    fig, ax1 = plt.subplots(figsize=(12, 6))
+    # first plot
+    ax1.plot(Q_array, delta_K_array, linestyle='-',
+             color='orange', label=r'$\Delta K$')  # ,  marker='o', markersize=3)
+    ax1.set_xlabel(r'$Q$', fontsize=10, fontweight='bold')
+    ax1.set_ylabel(r'$\Delta K$', fontsize=10, fontweight='bold', color='orange')
+    ax1.tick_params(axis='y', labelcolor='orange')
+    # ax1.axhline(y=0, color='orange', linestyle='-', linewidth=0.5)
+    ax1.set_ylim(-1.5e6, 7.5e6)  # Set y-axis limits for ax1
+    ax1.set_xlim(0, 0.87e7)  # Set y-axis limits for ax1
+
+
+    ax2 = ax1.twinx()
+    # second plot
+    ax2.plot(Q_array, F_array, linestyle='-', color='green', label=r'$F$ function')  # ,  marker='o', markersize=3)
+    ax2.set_xlabel(r'$Q$', fontsize=10, fontweight='bold')
+    ax2.set_ylabel('Cost', fontsize=10, fontweight='bold', color='green')
+    ax2.tick_params(axis='y', labelcolor='green')
+    # ax2.axhline(y=0, color='green', linestyle='-', linewidth=0.5)
+    ax2.set_ylim(-0.3e9, 1.5e9)
+    ax2.set_xlim(0, 0.87e7)
+
+    # Adding a horizontal line at y=0
+    ax1.axhline(y=0, color='black', linestyle='-')
+
+
+    # adding legends
+    lines_1, labels_1 = ax1.get_legend_handles_labels()
+    lines_2, labels_2 = ax2.get_legend_handles_labels()
+    # ax1.legend(lines_1 + lines_2, labels_1 + labels_2, loc='upper center', bbox_to_anchor=(0.5, -0.2), fancybox=True, shadow=True, fontsize=8, ncol=3)
+
+    ax1.legend(lines_1 + lines_2, labels_1 + labels_2, loc='upper left')
+
+    plt.title(plot_title, fontsize=10, fontweight='bold')
+    plt.tight_layout()
+    if result_folder is not None and filename is not None:
+        check_folder(result_folder)
+        plt.savefig(result_folder + filename, bbox_inches='tight')
+    plt.show()
+
 
 
 def numerical_integral_to_calculate_F_function(Q_trajectory_array, t_array, A, alpha, beta, rho, K_0, delta_K, delta_t, c_f, c_v, c_u, c_h):

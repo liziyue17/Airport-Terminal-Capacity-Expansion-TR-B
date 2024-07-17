@@ -63,9 +63,9 @@ def plot_simulation_curve(time_sample, cumulated_sample, title, plot_horizontal 
     plt.plot(time_sample, cumulated_sample, linestyle='-', linewidth=1.5, color='tab:blue', label = 'Simulation curve')#,  marker='o', markersize=3)
     if plot_horizontal is not None:
         plt.axhline(y=plot_horizontal, color='black', linestyle='--', label=r'$Q = Q_{\max}$')
-    plt.title(title, fontsize=18, fontweight='bold')
-    plt.xlabel('Time', fontsize=14, fontweight='bold')
-    plt.ylabel(r'$Q$', fontsize=14, fontweight='bold')
+    plt.title(title, fontsize=14, fontweight='bold')
+    plt.xlabel('Time', fontsize=10, fontweight='bold')
+    plt.ylabel(r'$Q$', fontsize=10, fontweight='bold')
     plt.legend()
     plt.tight_layout()
     if save_folder is not None:
@@ -83,9 +83,9 @@ def plot_gbm_and_logistic(time_sample, cumulated_sample_gbm, cumulated_sample_lo
              label='GBM')
     plt.axhline(y=plot_horizontal, color='black', linestyle='--')#, label=r'$Q = Q_{\max}$')
 
-    plt.title(title, fontsize=18, fontweight='bold')
-    plt.xlabel('Time', fontsize=14, fontweight='bold')
-    plt.ylabel(r'$Q$', fontsize=14, fontweight='bold')
+    plt.title(title, fontsize=14, fontweight='bold')
+    plt.xlabel('Time', fontsize=10, fontweight='bold')
+    plt.ylabel(r'$Q$', fontsize=10, fontweight='bold')
     plt.legend()
     plt.tight_layout()
     if save_folder is not None:
@@ -103,35 +103,35 @@ if __name__ == '__main__':
     # cumulated_sample_logistic = Logistic_Demand_Simulation(increment_sample=increment_sample, dt=0.01, q_0=1, q_max=3000, eta=0.02,sigma=0.01)
     # cumulated_sample_gbm = GBM_Demand_Simulation(increment_sample=increment_sample, dt=0.01, q_0=1, eta=0.02, sigma=0.01)
     #
-    # # plot_simulation_curve(time_sample, cumulated_sample_logistic, "Simulation of Logistic Curve", plot_horizontal = 2000, save_folder = './results/simulation/')
+    # plot_simulation_curve(time_sample, cumulated_sample_logistic, "Simulation of Logistic Curve", plot_horizontal = 3000, save_folder = './results/simulation/')
     #
     # plot_gbm_and_logistic(time_sample, cumulated_sample_gbm, cumulated_sample_logistic, 3000, save_folder='./results/simulation/')
-
+    #
     '''The following is a test example to verify that Logistic_Demand_After_Delta_t works well.'''
-    # Q = Logistic_Demand_After_Delta_t(delta_t=10, dt=0.01, q_0=100, q_max=2000, eta=0.03, sigma=0.01, trial_times=1000)
-    # print(np.mean(Q))
+    # # Q = Logistic_Demand_After_Delta_t(delta_t=10, dt=0.01, q_0=100, q_max=2000, eta=0.03, sigma=0.01, trial_times=1000)
+    # # print(np.mean(Q))
 
 
     '''The following is the simulation for numerical experiments'''
     from variable_definition.NumericalStudy.raw import *
 
     plt.figure(figsize=(12, 6))
-    # generate 3 samples
-    color = ['red', 'blue', 'green']
-    for i in range(3):
+    # generate 10 samples
+    n_samples = 10
+    color = plt.cm.coolwarm(np.linspace(0, 1, n_samples))
+    for i in range(n_samples):
         increment_sample, W_sample, time_sample = Wiener_Simulation(300, dt)
         cumulated_sample = Logistic_Demand_Simulation(increment_sample, dt, 1e5, q_max, eta, sigma)
         plt.plot(time_sample, cumulated_sample, linestyle='-', linewidth=1, color=color[i])
     plt.axhline(y=q_max, color='black', linestyle='--', label=r'$Q = Q_{\max}$')
-    plt.title('Sample Paths of Demand Growth', fontsize=18, fontweight='bold')
-    plt.xlabel('Time', fontsize=14, fontweight='bold')
-    plt.ylabel(r'$Q$', fontsize=14, fontweight='bold')
+    plt.title('Sample Paths of Demand Growth', fontsize=14, fontweight='bold')
+    plt.xlabel('Time', fontsize=10, fontweight='bold')
+    plt.ylabel(r'$Q$', fontsize=10, fontweight='bold')
     plt.legend()
     plt.tight_layout()
     save_folder = './results/simulation/'
     check_folder(save_folder)
     plt.savefig(save_folder + 'Sample Paths of Demand Growth' + '.pdf', bbox_inches='tight')
     plt.show()
-
 
 

@@ -19,15 +19,15 @@ beta = 3
 rho = 0.03
 K_0 = 4.5e7
 delta_K = 0.5e7 #This number is for plotting cost_function purpose only.
-delta_K_array = np.linspace(0, 1.5e7, 51)
-delta_K_for_plot_cost_function = [0.5e7, 1e7, 1.5e7]
+delta_K_array = np.linspace(0, 1.5e7, 151)
+delta_K_for_plot_cost_function = [2e6, 4e6, 6e6]
 c_f = 2e9
 c_v = 100
 c_u = 0.005
 
 c_h = 0.01
 
-delta = 0.5e6
+delta = 1e5
 
 num_of_grid = round((q_max - q_0 ) / delta) + 1
 q_array = np.linspace(q_0, q_max, num_of_grid)

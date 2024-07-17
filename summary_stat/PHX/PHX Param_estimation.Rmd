@@ -1,5 +1,5 @@
 ---
-title: "Param_estimation"
+title: "PHX Param_estimation"
 author: "Jelly Lee"
 date: "June 20, 2024"
 output: pdf_document
@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Set working directory and read data
 
 ```{r}
-setwd("C:/Users/zl23n/OneDrive - Florida State University/Graduate-FSU/Research/2024 Airport TR-B/airport_code/pythonProject/summary_stat")
+setwd("C:/Users/zl23n/OneDrive - Florida State University/Graduate-FSU/Research/2024 Airport TR-B/airport_code/Airport Code 0715/summary_stat/PHX")
 data <- read.csv("PHX_Annual.csv")
 colnames(data) <- c("year", "passenger")
 head(data)
@@ -44,9 +44,5 @@ model <- lm(y ~ x, data = data)
 summary(model)
 ```
 
-## plot diagnostics
 
-```{r}
-plot(model)
-```
 

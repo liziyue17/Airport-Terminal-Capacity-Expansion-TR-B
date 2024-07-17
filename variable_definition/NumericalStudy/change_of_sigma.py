@@ -38,8 +38,8 @@ num_of_grid = round((q_max - q_0 ) / delta) + 1
 q_array = np.linspace(q_0, q_max, num_of_grid)
 
 
-result_folder = './results/NumericalStudy/sigma/'
-cache_data_folder = './data/NumericalStudy/sigma/'
+result_folder = '../../results/NumericalStudy/sigma/'
+cache_data_folder = '../../data/NumericalStudy/sigma/'
 
 plot_title = 'Solving Optimal Solution for Numerical Study'
 

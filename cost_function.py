@@ -44,9 +44,9 @@ def plot_cost_difference_function(q_array, cost_difference_array, K_0, delta_K_f
     color_list = ['red', 'blue', 'green']
     for i in range(3):
         plt.plot(q_array, cost_difference_array[i], linestyle='-', color=color_list[i], label = r'$\Delta K = $' + f'{delta_K_for_plot_cost_function[i]:.0e}') #,  marker='o', markersize=3)
-    plt.title(title, fontsize=18, fontweight='bold')
-    plt.xlabel('Q', fontsize=14, fontweight='bold')
-    plt.ylabel('Cost (Saving)', fontsize=14, fontweight='bold')
+    plt.title(title, fontsize=14, fontweight='bold')
+    plt.xlabel('Q', fontsize=10, fontweight='bold')
+    plt.ylabel('Cost (Saving)', fontsize=10, fontweight='bold')
     plt.axvline(x = K_0, color='gray', linestyle='--', label=r'$x = K_0$')
     plt.axhline(y=0, color='black', linestyle='-', linewidth = 0.7)
     for i in range (3):
@@ -57,19 +57,17 @@ def plot_cost_difference_function(q_array, cost_difference_array, K_0, delta_K_f
 
     if save_folder is not None:
         check_folder(save_folder)
-        plt.savefig(save_folder + 'Cost Difference Function.pdf', bbox_inches='tight')
+        plt.savefig(save_folder + title + '.pdf', bbox_inches='tight')
 
     plt.show()
 
 if __name__ == '__main__':
     '''The following example is for plotting purposes'''
-    # from variable_definition.NumericalStudy.raw import *
-
-    from variable_definition.PHX.raw import *
+    from variable_definition.NumericalStudy.raw import *
 
     cost_difference_array = np.zeros([3, q_array.shape[0]])
     for i in range(len(delta_K_for_plot_cost_function)):
         cost_difference_array[i] = get_cost_difference_function(q_array, A, alpha, beta, rho, K_0, delta_K_for_plot_cost_function[i], delta_t, c_f, c_v, c_u, c_h)
-    plot_cost_difference_function(q_array, cost_difference_array, K_0, delta_K_for_plot_cost_function, title = "Cost Difference Function for Numerical Study", save_folder = './results/aux_plot/PHX/')
+    plot_cost_difference_function(q_array, cost_difference_array, K_0, delta_K_for_plot_cost_function, title = "Cost Difference Function for Numerical Study", save_folder = './results/aux_plot/')
 
 
